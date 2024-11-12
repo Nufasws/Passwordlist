@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Interactive Password List Generator</title>
+  <style>
+    /* Global Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #111;
+      color: white;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 20px;
+      position: relative;
+    }
+
+    /* Container Style */
+    .container {
+      background-color: #222;
+      border-radius: 20px;
+      padding: 40px 50px;
+      width: 100%;
+      max-width: 1200px;
+      position: relative;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+      z-index: 1;
+      transform-style: preserve-3d;
+      perspective: 1000px;
+      overflow: hidden;
+      animation: containerAnimation 2s ease-in-out;
+    }
+
+    @keyframes containerAnimation {
+      from {
+        opacity: 0;
+        transform: translateY(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Button and Form Styling */
+    .btn {
+      background: linear-gradient(45deg, #ff6f00, #ff3d00);
+      padding: 20px 35px;
+      font-size: 18px;
+      color: white;
+      text-transform: uppercase;
+      font-weight: bold;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 40px rgba(255, 69, 0, 0.7);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    /* Review Section */
+    .reviews {
+      margin-top: 50px;
+    }
+
+    .review-form {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 30px;
+    }
+
+    .review-input {
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #555;
+      color: #ddd;
+      background-color: #333;
+    }
+
+    .review-input:focus {
+      outline: none;
+      border: 1px solid #ff6f00;
+    }
+
+    .review-submit {
+      padding: 10px;
+      font-size: 16px;
+      color: white;
+      background-color: #ff6f00;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .review-submit:hover {
+      background-color: #ff3d00;
+    }
+
+    /* Review Display */
+    .review-display {
+      margin-top: 20px;
+    }
+
+    .review {
+      background-color: #333;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      animation: modalFadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .modal-content {
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 8px;
+      width: 60%;
+      margin: 10% auto;
+      color: #111;
+      font-size: 18px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-header {
+      text-align: center;
+      font-size: 24px;
+      color: #FF3D00;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      cursor: pointer;
+    }
+
+    /* Footer Section */
+    footer {
+      text-align: center;
+      color: #ccc;
+      margin-top: 100px;
+      font-size: 14px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Main Container -->
+  <div class="container">
+    <h1>Password List Generator & Downloader</h1>
+
+    <!-- Generate Password List Section -->
+    <div class="generate-password">
+      <label for="numPasswords">Enter the number of passwords to generate (up to 10 million):</label>
+      <input type="number" id="numPasswords" class="review-input" min="1" max="10000000" value="1000">
+      <button class="btn" id="generatePasswordsBtn">Generate Passwords</button>
+      <div id="generatedPasswords" style="margin-top: 20px;"></div>
+    </div>
+
+    <!-- Button Container -->
+    <div class="buttons">
+      <button class="btn" id="downloadOPListBtn">Download OPList</button>
+      <button class="btn" id="docBtn">View Documentation</button>
+    </div>
+
+    <!-- Review Section -->
+    <div class="reviews">
+      <h3>User Reviews</h3>
+      <div class="review-form">
+        <textarea id="reviewText" class="review-input" rows="4" placeholder="Write a review..."></textarea>
+        <button class="review-submit" id="submitReviewBtn">Submit Review</button>
+      </div>
+      <div class="review-display" id="reviewDisplay"></div>
+    </div>
+
+  </div>
+
+  <!-- Documentation Modal -->
+  <div id="docModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div class="modal-header">
+        Project Documentation
+      </div>
+      <p><strong>Project Name:</strong> Password List Generator & Downloader</p>
+      <p><strong>Description:</strong> A tool to download or generate custom password lists.</p>
+      <p><strong>How the List Was Made:</strong> Merging multiple password datasets for better coverage.</p>
+      <p><strong>Technologies Used:</strong> HTML5, CSS3, JavaScript, Google Drive API</p>
+      <p><strong>Licensing:</strong> MIT License</p>
+      <p><strong>Features:</strong></p>
+      <ul>
+        <li>Download pre-made password lists</li>
+        <li>Create custom password lists</li>
+        <li>Mobile responsive design</li>
+        <li>Interactive features and animations</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>Made with ❤️ by You</p>
+  </footer>
+
+  <script>
+    // Modal functionality
+    var modal = document.getElementById("docModal");
+    var btn = document.getElementById("docBtn");
+    var span = document.getElementsByClassName("close")[0];
+
+    btn.onclick = function() {
+      modal.style.display = "block";
+    }
+
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+
+    // Generate Passwords
+    document.getElementById('generatePasswordsBtn').addEventListener('click', function() {
+      const numPasswords = document.getElementById('numPasswords').value;
+      const maxPasswords = 10000000;
+
+      if (numPasswords > maxPasswords) {
+        alert("You can't generate more than 10 million passwords.");
+        return;
+      }
+
+      let passwords = [];
+      for (let i = 0; i < numPasswords; i++) {
+        passwords.push(generatePassword());
+      }
+
+      const passwordList = passwords.join("\n");
+      const downloadLink = document.createElement('a');
+      downloadLink.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(passwordList);
+      downloadLink.download = "password_list.txt";
+      downloadLink.textContent = "Download Password List";
+      document.getElementById('generatedPasswords').innerHTML = '';
+      document.getElementById('generatedPasswords').appendChild(downloadLink);
+    });
+
+    // Simple Password Generator Function
+    function generatePassword() {
+      const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
+      let password = '';
+      for (let i = 0; i < 12; i++) {
+        const randomIndex = Math.floor(Math.random() * chars.length);
+        password += chars[randomIndex];
+      }
+      return password;
+    }
+
+    // Download OPList
+    document.getElementById('downloadOPListBtn').addEventListener('click', function() {
+      const oplistUrl = 'https://drive.usercontent.google.com/download?id=1uRwkS8GF_QnI2vhO-UNWzTXxMN-Ti7Id&export=download&authuser=0'; // Replace with actual path to your OPList file
+      const downloadLink = document.createElement('a');
+      downloadLink.href = oplistUrl;
+      downloadLink.download = 'oplist.txt';
+      downloadLink.click();
+    });
+
+    // Review Functionality
+    const reviews = [];
+
+    document.getElementById('submitReviewBtn').addEventListener('click', function() {
+      const reviewText = document.getElementById('reviewText').value;
+      if (reviewText) {
+        reviews.push(reviewText);
+        displayReviews();
+        document.getElementById('reviewText').value = ''; // clear the input
+      }
+    });
+
+    // Display Reviews
+    function displayReviews() {
+      const reviewDisplay = document.getElementById('reviewDisplay');
+      reviewDisplay.innerHTML = '';
+      reviews.forEach((review, index) => {
+        const reviewDiv = document.createElement('div');
+        reviewDiv.classList.add('review');
+        reviewDiv.textContent = review;
+        reviewDisplay.appendChild(reviewDiv);
+      });
+    }
+
+  </script>
+</body>
+</html>
