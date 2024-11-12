@@ -79,108 +79,51 @@
       transform: scale(0.98);
     }
 
-    /* Review Section */
-    .reviews {
-      margin-top: 50px;
+    /* Hidden content */
+    .hidden {
+      display: none;
     }
 
-    .review-form {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 30px;
-    }
-
-    .review-input {
-      margin-bottom: 10px;
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 5px;
-      border: 1px solid #555;
-      color: #ddd;
+    /* Toggle Form Section */
+    .form-section {
+      display: none;
       background-color: #333;
-    }
-
-    .review-input:focus {
-      outline: none;
-      border: 1px solid #ff6f00;
-    }
-
-    .review-submit {
-      padding: 10px;
-      font-size: 16px;
-      color: white;
-      background-color: #ff6f00;
-      border: none;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-
-    .review-submit:hover {
-      background-color: #ff3d00;
-    }
-
-    /* Review Display */
-    .review-display {
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
       margin-top: 20px;
     }
 
-    .review {
-      background-color: #333;
-      padding: 10px;
-      border-radius: 8px;
-      margin-bottom: 15px;
-    }
-
-    /* Modal Styles */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
+    .form-input {
       width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 999;
-      animation: modalFadeIn 0.5s ease-in-out;
-    }
-
-    @keyframes modalFadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-
-    .modal-content {
-      background-color: #fff;
-      padding: 40px;
+      padding: 15px;
+      margin: 10px 0;
+      font-size: 16px;
+      background-color: #444;
+      border: none;
       border-radius: 8px;
-      width: 60%;
-      margin: 10% auto;
-      color: #111;
+      color: #fff;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border: 1px solid #ff6f00;
+    }
+
+    .form-submit {
+      background-color: #ff6f00;
+      color: white;
+      border: none;
+      padding: 15px;
+      width: 100%;
       font-size: 18px;
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
-    }
-
-    .modal-header {
-      text-align: center;
-      font-size: 24px;
-      color: #FF3D00;
-    }
-
-    .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-    }
-
-    .close:hover,
-    .close:focus {
-      color: black;
       cursor: pointer;
+      border-radius: 10px;
+      margin-top: 15px;
+    }
+
+    .form-submit:hover {
+      background-color: #ff3d00;
     }
 
     /* Footer Section */
@@ -199,52 +142,34 @@
   <div class="container">
     <h1>Password List Generator & Downloader</h1>
 
-    <!-- Generate Password List Section -->
-    <div class="generate-password">
-      <label for="numPasswords">Enter the number of passwords to generate (up to 10 million):</label>
-      <input type="number" id="numPasswords" class="review-input" min="1" max="10000000" value="1000">
-      <button class="btn" id="generatePasswordsBtn">Generate Passwords</button>
-      <div id="generatedPasswords" style="margin-top: 20px;"></div>
+    <!-- Default View (Main UI) -->
+    <div id="mainUI">
+      <div class="buttons">
+        <button class="btn" id="downloadOPListBtn">Download OPList</button>
+        <button class="btn" id="generatePasswordsBtn">Generate Passwords</button>
+        <button class="btn" id="toggleFormBtn">Create Repository / Talk</button>
+      </div>
     </div>
 
-    <!-- Button Container -->
-    <div class="buttons">
-      <button class="btn" id="downloadOPListBtn">Download OPList</button>
-      <button class="btn" id="docBtn">View Documentation</button>
+    <!-- Repository Creation Form (Initially Hidden) -->
+    <div id="formSection" class="form-section hidden">
+      <h3>Create a New Repository</h3>
+      <input type="text" id="repoName" class="form-input" placeholder="Repository Name">
+      <textarea id="repoDesc" class="form-input" placeholder="Repository Description" rows="4"></textarea>
+      <button class="form-submit" id="submitRepoBtn">Create Repository</button>
+      <button class="form-submit" id="backBtn">Back to Main</button>
     </div>
 
     <!-- Review Section -->
     <div class="reviews">
       <h3>User Reviews</h3>
       <div class="review-form">
-        <textarea id="reviewText" class="review-input" rows="4" placeholder="Write a review..."></textarea>
-        <button class="review-submit" id="submitReviewBtn">Submit Review</button>
+        <textarea id="reviewText" class="form-input" rows="4" placeholder="Write a review..."></textarea>
+        <button class="form-submit" id="submitReviewBtn">Submit Review</button>
       </div>
       <div class="review-display" id="reviewDisplay"></div>
     </div>
 
-  </div>
-
-  <!-- Documentation Modal -->
-  <div id="docModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <div class="modal-header">
-        Project Documentation
-      </div>
-      <p><strong>Project Name:</strong> Password List Generator & Downloader</p>
-      <p><strong>Description:</strong> A tool to download or generate custom password lists.</p>
-      <p><strong>How the List Was Made:</strong> Merging multiple password datasets for better coverage.</p>
-      <p><strong>Technologies Used:</strong> HTML5, CSS3, JavaScript, Google Drive API</p>
-      <p><strong>Licensing:</strong> MIT License</p>
-      <p><strong>Features:</strong></p>
-      <ul>
-        <li>Download pre-made password lists</li>
-        <li>Create custom password lists</li>
-        <li>Mobile responsive design</li>
-        <li>Interactive features and animations</li>
-      </ul>
-    </div>
   </div>
 
   <!-- Footer -->
@@ -253,70 +178,38 @@
   </footer>
 
   <script>
-    // Modal functionality
-    var modal = document.getElementById("docModal");
-    var btn = document.getElementById("docBtn");
-    var span = document.getElementsByClassName("close")[0];
+    // Toggle between main UI and form section
+    const toggleFormBtn = document.getElementById('toggleFormBtn');
+    const mainUI = document.getElementById('mainUI');
+    const formSection = document.getElementById('formSection');
+    const backBtn = document.getElementById('backBtn');
 
-    btn.onclick = function() {
-      modal.style.display = "block";
-    }
-
-    span.onclick = function() {
-      modal.style.display = "none";
-    }
-
-    window.onclick = function(event) {
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
-    }
-
-    // Generate Passwords
-    document.getElementById('generatePasswordsBtn').addEventListener('click', function() {
-      const numPasswords = document.getElementById('numPasswords').value;
-      const maxPasswords = 10000000;
-
-      if (numPasswords > maxPasswords) {
-        alert("You can't generate more than 10 million passwords.");
-        return;
-      }
-
-      let passwords = [];
-      for (let i = 0; i < numPasswords; i++) {
-        passwords.push(generatePassword());
-      }
-
-      const passwordList = passwords.join("\n");
-      const downloadLink = document.createElement('a');
-      downloadLink.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(passwordList);
-      downloadLink.download = "password_list.txt";
-      downloadLink.textContent = "Download Password List";
-      document.getElementById('generatedPasswords').innerHTML = '';
-      document.getElementById('generatedPasswords').appendChild(downloadLink);
+    toggleFormBtn.addEventListener('click', function() {
+      mainUI.style.display = 'none'; // Hide main content
+      formSection.style.display = 'block'; // Show form section
     });
 
-    // Simple Password Generator Function
-    function generatePassword() {
-      const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
-      let password = '';
-      for (let i = 0; i < 12; i++) {
-        const randomIndex = Math.floor(Math.random() * chars.length);
-        password += chars[randomIndex];
-      }
-      return password;
-    }
-
-    // Download OPList
-    document.getElementById('downloadOPListBtn').addEventListener('click', function() {
-      const oplistUrl = 'https://drive.usercontent.google.com/download?id=1uRwkS8GF_QnI2vhO-UNWzTXxMN-Ti7Id&export=download&authuser=0'; // Replace with actual path to your OPList file
-      const downloadLink = document.createElement('a');
-      downloadLink.href = oplistUrl;
-      downloadLink.download = 'oplist.txt';
-      downloadLink.click();
+    backBtn.addEventListener('click', function() {
+      formSection.style.display = 'none'; // Hide form section
+      mainUI.style.display = 'block'; // Show main content
     });
 
-    // Review Functionality
+    // Function to submit repository (dummy function for now)
+    document.getElementById('submitRepoBtn').addEventListener('click', function() {
+      const repoName = document.getElementById('repoName').value;
+      const repoDesc = document.getElementById('repoDesc').value;
+
+      if (repoName && repoDesc) {
+        alert(`Repository Created: ${repoName}\nDescription: ${repoDesc}`);
+        // Clear inputs
+        document.getElementById('repoName').value = '';
+        document.getElementById('repoDesc').value = '';
+      } else {
+        alert('Please fill out both fields.');
+      }
+    });
+
+    // Review functionality
     const reviews = [];
 
     document.getElementById('submitReviewBtn').addEventListener('click', function() {
@@ -334,11 +227,25 @@
       reviewDisplay.innerHTML = '';
       reviews.forEach((review, index) => {
         const reviewDiv = document.createElement('div');
-        reviewDiv.classList.add('review');
         reviewDiv.textContent = review;
+        reviewDiv.classList.add('review');
         reviewDisplay.appendChild(reviewDiv);
       });
     }
+
+    // Download OPList
+    document.getElementById('downloadOPListBtn').addEventListener('click', function() {
+      const oplistUrl = 'path/to/your/oplist.txt'; // Replace with actual path to your OPList file
+      const downloadLink = document.createElement('a');
+      downloadLink.href = oplistUrl;
+      downloadLink.download = 'oplist.txt';
+      downloadLink.click();
+    });
+
+    // Generate Passwords
+    document.getElementById('generatePasswordsBtn').addEventListener('click', function() {
+      alert('Password generation functionality goes here!');
+    });
 
   </script>
 </body>
